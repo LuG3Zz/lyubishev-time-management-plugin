@@ -78,9 +78,19 @@ export default class LyubishevPlugin extends Plugin {
   // 创建 Modal 并插入 Vue 组件
   createModal() {
     const modal = new Modal(this.app);
-    modal.contentEl.createEl('h2', { text: 'Lyubishev Time Table' });
 
+    // 创建标题并居中
+    const titleEl = modal.contentEl.createEl('h2', { text: 'Lyubishev Time Table' });
+    titleEl.style.textAlign = 'center';  // 居中标题
+    
+    // 创建 Vue 容器并挂载组件
     const container = modal.contentEl.createDiv();
+    // 设置容器居中
+  container.style.display = 'flex';
+  container.style.flexDirection = 'column';
+  container.style.alignItems = 'center';
+  container.style.justifyContent = 'center';
+  container.style.height = '100%';  // 确保容器占满整个 Modal
     const app = createApp(TimeTable, {
       cellColors: this.cellColors,
       saveCellColors: this.saveCellColors.bind(this)
@@ -89,6 +99,7 @@ export default class LyubishevPlugin extends Plugin {
 
     modal.open();
   }
+  
 
   onunload() {
     console.log("Lyubishev Time Management Plugin Unloaded");

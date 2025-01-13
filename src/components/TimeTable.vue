@@ -19,9 +19,10 @@
         v-for="(day, dayIndex) in weekDays"
         :key="dayIndex"
         class="time-cell"
-        :style="{ backgroundColor: day.hours[hourIndex].color }"
+        :style="{ backgroundColor: day.hours[hourIndex].color, color: getFontColor(day.hours[hourIndex].color) }"
         @click="changeCellColor(day.date, hourIndex)"
       >
+        <!-- 将活动名称包装在一个 div 中，默认隐藏 -->
         <div class="activity-name">{{ day.hours[hourIndex].activity }}</div>
       </div>
     </div>
@@ -75,11 +76,24 @@ export default {
       // 强制 Vue 更新组件视图
       this.$forceUpdate(); // 强制 Vue 更新视图
     },
+
+    // 计算背景色的亮度，返回合适的字体颜色
+    getFontColor(backgroundColor) {
+      // 获取背景色的 RGB 值
+      const hex = backgroundColor.replace('#', '');
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+
+      // 计算亮度
+      const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+      // 如果亮度较低，字体使用白色；亮度较高，字体使用黑色
+      return brightness < 128 ? '#ffffff' : '#e4113b';
+    },
   },
 };
 </script>
-
-
 
 <style scoped>
 .time-table-container {
@@ -125,50 +139,56 @@ export default {
   margin-right: 14px; /* 单元格间隔 */
   margin-left: 15px; /* 单元格间隔 */
   margin-bottom: 3px; /* 单元格上下间隔 */
+  font-size: 10px; /* 设置字体大小 */
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  border-radius: 5px; /* 添加圆角 */
+  position: relative; /* 允许子元素（活动名称）使用 z-index */
 }
 
 .time-cell:first-child {
   background-color: transparent; /* 首列没有背景颜色 */
+  font-size: 14px; /* 保持第一列字体正常大小 */
+}
+
+.time-cell:hover .activity-name {
+  display: block; /* 鼠标悬停时显示活动信息 */
+}
+
+.activity-name {
+  display: none; /* 默认隐藏活动信息 */
+  font-size: 20px; /* 设置活动信息字体大小 */
+  text-align: center;
+  z-index: 10; /* 确保活动名称显示在最顶层 */
+  position: absolute; /* 绝对定位 */
 }
 
 .time-cell:hover {
   background-color: #e0e0e0;
 }
 
-.color-picker-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px;
-  background-color: #ffffff;
+.color-picker {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  margin-top: 10px;
+  position: relative;
 }
 
-.color-picker-container input {
-  margin-left: 10px;
+.color-picker input {
+  margin: 0 5px;
   padding: 5px;
 }
 
-button {
-  padding: 5px 10px;
-  background-color: #4CAF50;
-  color: white;
+.color-picker input[type="color"] {
+  width: 40px;
+  height: 40px;
   border: none;
-  cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
+.color-picker input[type="text"] {
+  padding: 5px;
+  width: 150px;
 }
 </style>
-
-
-
-
-
-
-
-
