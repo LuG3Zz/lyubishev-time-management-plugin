@@ -19,14 +19,17 @@
         v-for="(day, dayIndex) in weekDays"
         :key="dayIndex"
         class="time-cell"
-        :style="{ backgroundColor: day.hours[hourIndex] }"
+        :style="{ backgroundColor: day.hours[hourIndex].color }"
         @click="changeCellColor(day.date, hourIndex)"
-      ></div>
+      >
+        <div class="activity-name">{{ day.hours[hourIndex].activity }}</div>
+      </div>
     </div>
     
-    <!-- 颜色选择器 -->
+    <!-- 颜色选择器和活动名称输入框 -->
     <div class="color-picker">
       <input type="color" v-model="colorPicker" />
+      <input type="text" v-model="activityName" placeholder="Enter activity name" />
     </div>
   </div>
 </template>
@@ -43,6 +46,7 @@ export default {
     return {
       hours: Array.from({ length: 24 }, (_, i) => `${i}:00`), // 24小时
       colorPicker: '#ffffff', // 默认颜色选择器的颜色
+      activityName: '', // 用户输入的活动名称
     };
   },
   computed: {
@@ -54,17 +58,29 @@ export default {
   methods: {
     // 选择颜色后更新单元格颜色
     changeCellColor(date, hourIndex) {
-      // 更新指定日期和小时的颜色
-      this.cellColors[date].hours[hourIndex] = this.colorPicker; // 更新对应日期和小时的颜色
-      
-      // 强制 Vue 响应式更新
-      this.$forceUpdate();  // 强制 Vue 更新组件视图
-      
+      // 创建一个新的对象，避免修改引用
+      const updatedCell = {
+        color: this.colorPicker,
+        activity: this.activityName,
+      };
+
+      // 更新指定日期和小时的颜色和活动名称
+      const day = this.cellColors[date];
+      day.hours = [...day.hours]; // 创建新的数组副本
+      day.hours[hourIndex] = updatedCell; // 更新指定小时的数据
+
+      // 保存颜色数据到父组件
       this.saveCellColors(this.cellColors); // 保存数据
+
+      // 强制 Vue 更新组件视图
+      this.$forceUpdate(); // 强制 Vue 更新视图
     },
   },
 };
 </script>
+
+
+
 <style scoped>
 .time-table-container {
   display: flex;
