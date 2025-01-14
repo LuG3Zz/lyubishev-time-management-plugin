@@ -1,26 +1,26 @@
 <template>
   <div class="time-statistics">
-    <h2>时间统计</h2>
+    <h2>Time Statistics</h2>
     <div class="controls">
       <div class="date-range">
-        <label for="startDate">开始日期：</label>
+        <label for="startDate">Start Date:</label>
         <input type="date" v-model="startDate" @change="updateChart" />
-        <label for="endDate">结束日期：</label>
+        <label for="endDate">End Date:</label>
         <input type="date" v-model="endDate" @change="updateChart" />
       </div>
       <div class="chart-type">
-        <label for="chartType">图表类型：</label>
+        <label for="chartType">Chart Type:</label>
         <select v-model="chartType" @change="updateChart">
-          <option value="bar">柱状图</option>
-          <option value="pie">饼图</option>
-          <option value="line">折线图</option>
+          <option value="bar">Bar Chart</option>
+          <option value="pie">Pie Chart</option>
+          <option value="line">Line Chart</option>
         </select>
       </div>
       <div class="data-type">
-        <label for="dataType">数据分组：</label>
+        <label for="dataType">Group By:</label>
         <select v-model="dataType" @change="updateChart">
-          <option value="activity">按活动</option>
-          <option value="category">按分类</option>
+          <option value="activity">By Activity</option>
+          <option value="category">By Category</option>
         </select>
       </div>
     </div>
@@ -28,7 +28,7 @@
       <canvas ref="chartCanvas"></canvas>
     </div>
     <div class="footer">
-      <button @click="closeModal">关闭</button>
+      <button @click="closeModal">Close</button>
     </div>
   </div>
 </template>
@@ -92,64 +92,64 @@ export default {
 
     // 更新图表
     const updateChart = () => {
-      const { labels, data, categoryLabels, categoryData } = generateStatistics(startDate.value, endDate.value);
+  const { labels, data, categoryLabels, categoryData } = generateStatistics(startDate.value, endDate.value);
 
-      const chartLabels = dataType.value === 'activity' ? labels : categoryLabels;
-      const chartData = dataType.value === 'activity' ? data : categoryData;
+  const chartLabels = dataType.value === 'activity' ? labels : categoryLabels;
+  const chartData = dataType.value === 'activity' ? data : categoryData;
 
-      if (chartInstance) {
-        chartInstance.destroy(); // 销毁旧的图表实例
-      }
+  if (chartInstance) {
+    chartInstance.destroy(); // Destroy the old chart instance
+  }
 
-      if (chartCanvas.value) {
-        chartInstance = new Chart(chartCanvas.value, {
-          type: chartType.value, // 使用用户选择的图表类型
-          data: {
-            labels: chartLabels,
-            datasets: [
-              {
-                label: '时间花费（小时）',
-                data: chartData,
-                backgroundColor: [
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                ], // 不同颜色
-                borderColor: [
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(153, 102, 255, 1)',
-                ],
-                borderWidth: 1,
-              },
+  if (chartCanvas.value) {
+    chartInstance = new Chart(chartCanvas.value, {
+      type: chartType.value, // Use the selected chart type
+      data: {
+        labels: chartLabels,
+        datasets: [
+          {
+            label: 'Time Spent (Hours)', // Updated label
+            data: chartData,
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+            ], // Different colors
+            borderColor: [
+              'rgba(75, 192, 192, 1)',
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(153, 102, 255, 1)',
             ],
+            borderWidth: 1,
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: chartType.value === 'pie' ? {} : {
-              y: {
-                beginAtZero: true,
-                title: {
-                  display: true,
-                  text: '小时数',
-                },
-              },
-              x: {
-                title: {
-                  display: true,
-                  text: dataType.value === 'activity' ? '活动' : '分类',
-                },
-              },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: chartType.value === 'pie' ? {} : {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Hours', // Updated Y-axis title
             },
           },
-        });
-      }
-    };
+          x: {
+            title: {
+              display: true,
+              text: dataType.value === 'activity' ? 'Activity' : 'Category', // Updated X-axis title
+            },
+          },
+        },
+      },
+    });
+  }
+}; 
 
     // 初始化图表
     onMounted(() => {

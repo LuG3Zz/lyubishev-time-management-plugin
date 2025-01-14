@@ -1,12 +1,11 @@
 {
-    "id": "lyubishev-time-management",
-    "name": "Lyubishev Time Management",
-    "version": "0.1.0",
-    "minAppVersion": "0.15.0",
-    "description": "A plugin to manage time based on Lyubishev method using a heatmap-style table.",
-    "author": "BrownLu",
-    "authorUrl": "https://yourwebsite.com",
-    "isDesktopOnly": false,
-    "main": "main.ts"
-  }
+  "id": "lyubishev-time-management",
+  "name": "Lyubishev Time Management",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "A time management plugin for Obsidian, inspired by Lyubishev's time tracking method.",
+  "author": "BrownLu",
+  "authorUrl": "http://brownlu.is-best.net/",
+  "isDesktopOnly": false
+}
   

@@ -5,8 +5,8 @@
       <div class="date-selector">
         <input type="date" v-model="selectedDate" @change="updateView" />
         <select v-model="selectedRange" @change="updateView">
-          <option value="week">周</option>
-          <option value="month">月</option>
+          <option value="week">Week</option>
+          <option value="month">Month</option>
         </select>
       </div>
       <div class="color-picker">
@@ -18,7 +18,7 @@
         </select>
         <input type="text" v-model="activityName" placeholder="Enter activity name" />
         <select v-model="selectedCategory">
-          <option value="">无分类</option>
+          <option value="">no category</option>
           <option v-for="(category, index) in activityCategories" :key="index" :value="category">
             {{ category }}
           </option>
