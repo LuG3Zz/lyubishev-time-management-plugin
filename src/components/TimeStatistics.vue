@@ -16,6 +16,13 @@
           <option value="line">折线图</option>
         </select>
       </div>
+      <div class="data-type">
+        <label for="dataType">数据分组：</label>
+        <select v-model="dataType" @change="updateChart">
+          <option value="activity">按活动</option>
+          <option value="category">按分类</option>
+        </select>
+      </div>
     </div>
     <div class="chart-container">
       <canvas ref="chartCanvas"></canvas>
@@ -39,11 +46,14 @@ export default {
     const startDate = ref(new Date().toISOString().split('T')[0]); // 默认开始日期为当天
     const endDate = ref(new Date().toISOString().split('T')[0]); // 默认结束日期为当天
     const chartType = ref('bar'); // 默认图表类型为柱状图
+    const dataType = ref('activity'); // 默认按活动分组
     let chartInstance = null;
 
     // 根据时间段生成统计数据
     const generateStatistics = (start, end) => {
       const activities = {};
+      const categories = {};
+
       const startDateObj = new Date(start);
       const endDateObj = new Date(end);
 
@@ -54,10 +64,19 @@ export default {
         if (dayData) {
           dayData.hours.forEach((hour) => {
             if (hour.activity) {
+              // 按活动统计
               if (!activities[hour.activity]) {
                 activities[hour.activity] = 0;
               }
-              activities[hour.activity] += 1; // 每小时的计数
+              activities[hour.activity] += 1;
+
+              // 按分类统计
+              if (hour.category) {
+                if (!categories[hour.category]) {
+                  categories[hour.category] = 0;
+                }
+                categories[hour.category] += 1;
+              }
             }
           });
         }
@@ -66,12 +85,17 @@ export default {
       return {
         labels: Object.keys(activities),
         data: Object.values(activities),
+        categoryLabels: Object.keys(categories),
+        categoryData: Object.values(categories),
       };
     };
 
     // 更新图表
     const updateChart = () => {
-      const { labels, data } = generateStatistics(startDate.value, endDate.value);
+      const { labels, data, categoryLabels, categoryData } = generateStatistics(startDate.value, endDate.value);
+
+      const chartLabels = dataType.value === 'activity' ? labels : categoryLabels;
+      const chartData = dataType.value === 'activity' ? data : categoryData;
 
       if (chartInstance) {
         chartInstance.destroy(); // 销毁旧的图表实例
@@ -81,11 +105,11 @@ export default {
         chartInstance = new Chart(chartCanvas.value, {
           type: chartType.value, // 使用用户选择的图表类型
           data: {
-            labels: labels,
+            labels: chartLabels,
             datasets: [
               {
                 label: '时间花费（小时）',
-                data: data,
+                data: chartData,
                 backgroundColor: [
                   'rgba(75, 192, 192, 0.2)',
                   'rgba(255, 99, 132, 0.2)',
@@ -118,7 +142,7 @@ export default {
               x: {
                 title: {
                   display: true,
-                  text: '活动',
+                  text: dataType.value === 'activity' ? '活动' : '分类',
                 },
               },
             },
@@ -132,8 +156,8 @@ export default {
       updateChart();
     });
 
-    // 监听日期和图表类型变化
-    watch([startDate, endDate, chartType], () => {
+    // 监听日期、图表类型和数据分组变化
+    watch([startDate, endDate, chartType, dataType], () => {
       updateChart();
     });
 
@@ -142,6 +166,7 @@ export default {
       startDate,
       endDate,
       chartType,
+      dataType,
       updateChart,
     };
   },
@@ -174,6 +199,12 @@ export default {
 }
 
 .chart-type {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.data-type {
   display: flex;
   gap: 10px;
   align-items: center;
