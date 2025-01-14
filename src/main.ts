@@ -1,6 +1,7 @@
 import { Plugin, Modal, Setting } from 'obsidian';
 import { createApp } from 'vue';
 import TimeTable from './components/TimeTable.vue';
+import TimeStatistics from './components/TimeStatistics.vue';
 import { reactive } from 'vue'; // 引入 reactive
 
 export default class LyubishevPlugin extends Plugin {
@@ -11,13 +12,38 @@ export default class LyubishevPlugin extends Plugin {
     console.log("Lyubishev Time Management Plugin Loaded");
 
     this.addCommand({
-      id: 'insert-time-table',
-      name: 'Insert Lyubishev Time Table',
+      id: 'Show-time-table',
+      name: 'Show Lyubishev Time Table',
       callback: () => {
         this.createModal();
       }
     });
+    // 添加新的统计命令
+    this.addCommand({
+      id: 'show-time-statistics',
+      name: 'Show Time Statistics',
+      callback: () => {
+        this.createStatisticsModal();
+      }
+    });
     this.loadCellColors();
+  }
+  // 创建统计功能的 Modal
+  createStatisticsModal() {
+    const modal = new Modal(this.app);
+   
+
+    const container = modal.contentEl.createDiv();
+
+    // 将 cellColors 转换为 Vue 的响应式对象
+    const reactiveCellColors = reactive(this.cellColors);
+
+    const app = createApp(TimeStatistics, {
+      cellColors: reactiveCellColors,
+    });
+    app.mount(container);
+
+    modal.open();
   }
 
   async saveCellColors(cellColors: Record<string, { date: string, weekday: string, hours: { color: string, activity: string }[] }>): Promise<void> {
@@ -79,19 +105,8 @@ export default class LyubishevPlugin extends Plugin {
   }
   createModal() {
     const modal = new Modal(this.app);
-    modal.contentEl.style.width = '80%';
-    modal.contentEl.style.height = '80%';
-    modal.contentEl.style.maxWidth = '1200px';
-    modal.contentEl.style.maxHeight = '800px';
-  
-  
     const container = modal.contentEl.createDiv();
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.alignItems = 'center';
-    container.style.justifyContent = 'center';
-    container.style.height = '100%';
-    container.style.width = '100%'; /* 容器宽度占满 Modal */
+
   
     // 将 cellColors 转换为 Vue 的响应式对象
     const reactiveCellColors = reactive(this.cellColors);

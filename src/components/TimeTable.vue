@@ -243,6 +243,8 @@ export default {
   border-radius: 3px;
   background-color: transparent;
   margin-right: 5px; /* 单元格间隔 */
+  font-weight: bold;
+  aspect-ratio: 1; 
 }
 
 .header-cell.highlight {
@@ -272,17 +274,15 @@ export default {
   border-radius: 3px;
   position: relative;
 }
-
 .time-cell:first-child {
   flex: 0 0 50px; /* 第一列（时间列）宽度 */
   background-color: transparent;
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: bold;
 }
-
 .time-cell:hover .activity-name {
   display: block;
 }
-
 .activity-name {
   display: none;
   font-size: 16px;
@@ -299,28 +299,6 @@ export default {
   white-space: nowrap; /* 防止文本换行 */
 }
 
-/* 响应式布局 */
-@media (max-width: 600px) {
-  .header-cell {
-    font-size: 10px;
-    padding: 3px;
-  }
-
-  .time-cell {
-    height: 20px;
-    font-size: 8px;
-  }
-
-  .time-cell:first-child {
-    flex: 0 0 40px; /* 更小的第一列（时间列）宽度 */
-    font-size: 10px;
-  }
-
-  .activity-name {
-    font-size: 8px;
-  }
-}
-
 /* 动态调整周视图和月视图的布局 */
 .time-table[data-range="week"] .header-cell,
 .time-table[data-range="week"] .time-cell {
@@ -329,19 +307,18 @@ export default {
 }
 
 .time-table[data-range="month"] {
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: 100%;
 }
 
 .time-table[data-range="month"] .header-cell,
 .time-table[data-range="month"] .time-cell {
-  flex: 0 0 calc(100%  / 7); /* 月视图下，单元格宽度固定为 (100% - 时间列宽度) / 7 */
   height: 20px;
-  font-size: 8px;
+  font-size: 10px;
 }
 
 .time-table[data-range="month"] .time-cell:first-child {
   flex: 0 0 50px; /* 月视图下，第一列（时间列）宽度 */
-  font-size: 10px;
+  font-size: 12px;
 }
 </style>
