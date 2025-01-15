@@ -25,9 +25,9 @@ jobs:
           node-version: "18"  # 使用 Node.js 18
           cache: npm  # 缓存 npm 依赖
 
-      # 3. 安装依赖
+      # 3. 安装依赖（不生成 package-lock.json）
       - name: Install dependencies
-        run: npm run chore  # 运行 npm install
+        run: npm install --no-package-lock
 
       # 4. 使用 TypeScript 和 esbuild 构建插件
       - name: Build plugin
