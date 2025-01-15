@@ -1,105 +1,176 @@
-<br />
+<div align="center">
+  <h1>📅 Lyubishev Time Management Plugin</h1>
+  <p>An Obsidian plugin for tracking and managing your time using the Lyubishev method.</p>
+  <p>
+    <a href="#english-version">English</a> | 
+    <a href="#中文版本">中文</a>
+  </p>
+  <p>
+    <a href="https://github.com/LuG3Zz/lyubishev-time-management-plugin/stargazers">
+      <img src="https://img.shields.io/github/stars/LuG3Zz/lyubishev-time-management-plugin?style=social" alt="GitHub Stars">
+    </a>
+    <a href="https://github.com/LuG3Zz/lyubishev-time-management-plugin/forks">
+      <img src="https://img.shields.io/github/forks/LuG3Zz/lyubishev-time-management-plugin?style=social" alt="GitHub Forks">
+    </a>
+    <a href="https://github.com/LuG3Zz/lyubishev-time-management-plugin/issues">
+      <img src="https://img.shields.io/github/issues/LuG3Zz/lyubishev-time-management-plugin" alt="GitHub Issues">
+    </a>
+    <a href="https://github.com/LuG3Zz/lyubishev-time-management-plugin/blob/main/LICENSE">
+      <img src="https://img.shields.io/github/license/LuG3Zz/lyubishev-time-management-plugin" alt="GitHub License">
+    </a>
+  </p>
+</div>
 
-[![splash.png]][splash.png.github]
+---
 
-[![obsidian.shield]]() [![typescript.shield]]() [![vue.shield]]() [![esbuild.shield]]() <br />
-[![status.shield]]() [![license.shield]]()
+<div id="english-version"></div>
 
-[English] • [简体中文] &#x1F54A;&#xFE0F;
+## 🌟 English Version
 
-<br />
+### 📖 Introduction
 
-## Introduction &#x1F4DC;
+The **Lyubishev Time Management Plugin** is designed to help you track and manage your time efficiently using the Lyubishev method. This plugin allows you to visualize your daily activities, categorize them, and analyze your time usage through various charts and tables.
 
-This is a Vue sample plugin for [Obsidian], and it should help get you started developing with [TypeScript] and [Vue 3] in [ESbuild].
+### 🚀 Features
 
-This template depends on the latest Obsidian API: `obsidian.d.ts`.
+- **Time Table**: Track your activities hour by hour with a customizable color-coded table.
+- **Time Statistics**: Analyze your time usage with bar, pie, and line charts.
+- **Gantt Chart**: Generate Gantt charts to visualize your activities over a selected date range.
+- **Customizable Color Presets**: Save and use custom color presets for quick activity tagging.
+- **Activity Categories**: Categorize your activities for better organization and analysis.
+- **CSV Import/Export**: Import and export your time table data as CSV files.
+- **Responsive Design**: Works seamlessly on both desktop and mobile devices.
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+### 🛠️ Installation
 
-## Recommended IDE Setup &#x1F6E0;&#xFE0F;
+1. Open **Obsidian**.
+2. Go to **Settings** > **Community plugins**.
+3. Click **Browse** and search for "Lyubishev Time Management".
+4. Click **Install** and then **Enable** the plugin.
 
-- [vscode] - IDE.
-- [Volar] - A vscode extension for Vue 3 language support.
+### 🎯 Usage
 
-## Quick Starting Guide for Using This Repo &#x1F9ED;
+#### Commands
 
-- Check [if someone already developed a plugin for what you want]! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you do not see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in the `.obsidian/plugins` folder.
-- Install [Node.js], then run `npm run chore` or `npm install` to install the package dependencies.
-- Run `npm run dev` to compile your plugin to `main.js` and `styles.css` in a development mode. In this time, make changes to your TypeScript or Vue 3 code in the `src` folder, they will be automatically compiled to `main.js` and `styles.css`.
-- Reload Obsidian to load the newest version of your plugin, then enable your plugin in the Obsidian settings window.
-- Run `npm run build` to compile your plugin to `main.js` and `styles.css` in a release mode.
+The plugin provides the following commands, which can be accessed via the **Command Palette** (`Ctrl/Cmd + P`):
 
-## Learn More &#x1F4D3;
+- **Show Lyubishev Time Table**: Opens the time table modal to track your activities.
+- **Show Time Statistics**: Opens the statistics modal to analyze your time usage.
+- **Generate Gantt Chart**: Opens the Gantt chart modal to generate a Gantt chart for a selected date range.
 
-- [Obsidian API].
-- [Obsidian Plugin Developer Docs] (author: [marcusolsson]).
-- [Obsidian Plugin 中文开发文档] (translator: [luhaifeng666]).
+#### Time Table
 
-## License &#x2696;&#xFE0F;
+1. Open the **Time Table** by clicking the ribbon icon or using the command palette.
+2. Select a date and range (week or month) to view your activities.
+3. Click on any cell to change its color and add an activity name or category.
 
-MIT license.
+#### Time Statistics
 
-<br />
+1. Open the **Time Statistics** modal from the command palette or ribbon icon.
+2. Select a date range and chart type (bar, pie, or line).
+3. Choose to group your data by activity or category.
 
-## 简单介绍 &#x1F4DC;
+#### Gantt Chart
 
-这是一个基于 Vue 的 [Obsidian] 插件开发模板, 它应该有助于您使用 [TypeScript] 和 [Vue 3] 同时搭配 [ESbuild] 进行开发.
+1. Open the **Gantt Chart** modal from the command palette.
+2. Select a date range and click **Generate Gantt Chart**.
+3. The Gantt chart will be inserted into your active note.
 
-此模板依赖于最新的 Obsidian API: `obsidian.d.ts`.
+### ⚙️ Settings
 
-**请注意:** Obsidian API 目前仍处于早期的 alpha 阶段, 因此随时都有可能发生变动!
+- **Color Presets**: Add or remove custom color presets for quick activity tagging.
+- **Activity Categories**: Add or remove activity categories for better organization.
+- **CSV Import/Export**: Import or export your time table data as CSV files.
+- **Clear Data**: Clear all color presets, activity categories, and time table data.
 
-## 推荐的 IDE 配置 &#x1F6E0;&#xFE0F;
+### 📜 License
 
-- [vscode] - IDE.
-- [Volar] - 可以提供 Vue 3 语法支持的 vscode 插件.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## 使用此仓库的快速入门指南 &#x1F9ED;
+### 🙏 Contributing
 
-- 检查[是否有人已经为您想要的东西开发了插件]! 可能已经有了一个跟您预期足够相似的现有插件, 您可以和它的开发者进行合作.
-- 使用 "Use this template" 按钮将此仓库复制一份 (如果您没有看到这个按钮, 请先登录 GitHub).
-- 将您的仓库克隆到本地. 为了方便起见, 您可以将仓库放到 `.obsidian/plugins` 文件夹中.
-- 安装 [Node.js], 然后运行 `npm run chore` 或 `npm install` 安装项目依赖.
-- 运行 `npm run dev` 可以在开发模式下将插件编译为 `main.js` 和 `styles.css` 文件. 此时修改 `src` 文件夹中的 TypeScript 或 Vue 3 代码都可以自动热更新到 `main.js` 和 `styles.css` 文件中.
-- 重新启动 Obsidian 以加载最新版本的插件, 然后在 Obsidian 的设置窗口中启用插件.
-- 运行 `npm run build` 可以在发布模式下将插件编译为 `main.js` 和 `styles.css` 文件.
+Contributions are welcome! Please read the [CONTRIBUTING](CONTRIBUTING.md) guide for more information.
 
-## 了解更多 &#x1F4D3;
+### 📧 Contact
 
-- [Obsidian API].
-- [Obsidian Plugin Developer Docs] (作者: [marcusolsson]).
-- [Obsidian Plugin 中文开发文档] (译者: [luhaifeng666]).
+For any questions or suggestions, feel free to open an issue or contact the maintainer.
 
-## 开源许可协议 &#x2696;&#xFE0F;
+---
 
-MIT 开源许可协议.
+<div id="中文版本"></div>
 
-[splash.png]: https://github.com/thmed/obsidian-vue-sample-plugin/raw/main/.github/splash/splash.png
-[splash.png.github]: https://github.com/thmed/obsidian-vue-sample-plugin/blob/main/.github/splash/splash.png
-[obsidian.shield]: https://img.shields.io/badge/Obsidian-^1.3.5-6C31E3?logo=obsidian&logoColor=white
-[typescript.shield]: https://img.shields.io/badge/TypeScript-^5.1.6-3178C6?logo=typescript&logoColor=white
-[vue.shield]: https://img.shields.io/badge/Vue-^3.3.4-238636?logo=vue.js&logoColor=white
-[esbuild.shield]: https://img.shields.io/badge/ESbuild-^0.18.17-997C00?logo=esbuild&logoColor=white
-[status.shield]: https://img.shields.io/badge/Status-Stable-238636
-[license.shield]: https://img.shields.io/badge/License-MIT-darkred
-[English]: #introduction-
-[简体中文]: #简单介绍-
+## 🌟 中文版本
 
-[Obsidian]: https://obsidian.md
-[TypeScript]: https://www.typescriptlang.org
-[Vue 3]: https://vuejs.org
-[ESbuild]: https://esbuild.github.io
-[vscode]: https://code.visualstudio.com
-[Volar]: https://marketplace.visualstudio.com/items?itemName=Vue.volar
-[if someone already developed a plugin for what you want]: https://obsidian.md/plugins
-[Node.js]: https://nodejs.org
-[Obsidian API]: https://github.com/obsidianmd/obsidian-api
-[Obsidian Plugin Developer Docs]: https://marcus.se.net/obsidian-plugin-docs
-[marcusolsson]: https://github.com/marcusolsson
-[Obsidian Plugin 中文开发文档]: https://luhaifeng666.github.io/obsidian-plugin-docs-zh
-[luhaifeng666]: https://github.com/luhaifeng666
+### 📖 介绍
 
-[是否有人已经为您想要的东西开发了插件]: https://obsidian.md/plugins
+**Lyubishev 时间管理插件** 旨在帮助您使用 Lyubishev 方法高效地跟踪和管理时间。该插件允许您通过可视化的方式记录每日活动，分类活动，并通过各种图表和表格分析您的时间使用情况。
+
+### 🚀 功能
+
+- **时间表**：通过可自定义的颜色编码表格，按小时跟踪您的活动。
+- **时间统计**：通过柱状图、饼图和折线图分析您的时间使用情况。
+- **甘特图**：生成甘特图，可视化选定日期范围内的活动。
+- **自定义颜色预设**：保存并使用自定义颜色预设，快速标记活动。
+- **活动分类**：为活动分类，以便更好地组织和分析。
+- **CSV 导入/导出**：将时间表数据导入或导出为 CSV 文件。
+- **响应式设计**：在桌面和移动设备上都能无缝使用。
+
+### 🛠️ 安装
+
+1. 打开 **Obsidian**。
+2. 进入 **设置** > **社区插件**。
+3. 点击 **浏览**，搜索 "Lyubishev Time Management"。
+4. 点击 **安装**，然后 **启用** 插件。
+
+### 🎯 使用指南
+
+#### 命令
+
+插件提供了以下命令，可以通过 **命令面板** (`Ctrl/Cmd + P`) 访问：
+
+- **Show Lyubishev Time Table**：打开时间表模态框，跟踪您的活动。
+- **Show Time Statistics**：打开统计模态框，分析您的时间使用情况。
+- **Generate Gantt Chart**：打开甘特图模态框，生成选定日期范围的甘特图。
+
+#### 时间表
+
+1. 通过点击功能区图标或使用命令面板打开 **时间表**。
+2. 选择日期和范围（周或月）以查看您的活动。
+3. 点击任意单元格以更改其颜色并添加活动名称或分类。
+
+#### 时间统计
+
+1. 通过命令面板或功能区图标打开 **时间统计** 模态框。
+2. 选择日期范围和图表类型（柱状图、饼图或折线图）。
+3. 选择按活动或分类分组数据。
+
+#### 甘特图
+
+1. 通过命令面板打开 **甘特图** 模态框。
+2. 选择日期范围并点击 **生成甘特图**。
+3. 甘特图将插入到您的当前笔记中。
+
+### ⚙️ 设置
+
+- **颜色预设**：添加或删除自定义颜色预设，以便快速标记活动。
+- **活动分类**：添加或删除活动分类，以便更好地组织。
+- **CSV 导入/导出**：将时间表数据导入或导出为 CSV 文件。
+- **清除数据**：清除所有颜色预设、活动分类和时间表数据。
+
+### 📜 许可证
+
+本项目采用 MIT 许可证。详情请参阅 [LICENSE](LICENSE) 文件。
+
+### 🙏 贡献
+
+欢迎贡献！请阅读 [CONTRIBUTING](CONTRIBUTING.md) 指南以获取更多信息。
+
+### 📧 联系
+
+如有任何问题或建议，请随时提出问题或联系维护者。
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by [BrownLu]</p>
+</div>
