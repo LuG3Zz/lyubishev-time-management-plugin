@@ -4,7 +4,8 @@
 
     /** Specify a list of glob patterns that match files to be included in compilation. */
     /** 指定一组需要纳入编译的文件. */
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+    "include": ["src/**/*", "vue-shims.d.ts"],
+   
 
     /*** Compiler Options. */
     /*** 编译选项. */
