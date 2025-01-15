@@ -1,0 +1,95 @@
+name: Build and Release Plugin
+
+on:
+  push:
+    tags:
+      - "*"  # 触发条件：推送标签时运行
+
+env:
+  PLUGIN_NAME: "obsidian-lyubishev-time-management-plugin"  # 插件名称
+  DIST_DIR: "dist"  # 构建产物目录
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 在 Ubuntu 环境中运行
+
+    steps:
+      # 1. 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. 设置 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"  # 使用 Node.js 18
+          cache: npm  # 缓存 npm 依赖
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm run chore  # 运行 npm install
+
+      # 4. 使用 TypeScript 和 esbuild 构建插件
+      - name: Build plugin
+        run: |
+          npm run build  # 运行 TypeScript 类型检查和 esbuild 构建
+          mkdir -p ${{ env.DIST_DIR }}  # 创建 dist 目录
+          cp main.js manifest.json styles.css ${{ env.DIST_DIR }}  # 复制必要文件到 dist 目录
+          zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.DIST_DIR }}  # 将 dist 目录压缩为 zip 文件
+          ls  # 列出当前目录内容（用于调试）
+
+      # 5. 创建 GitHub Release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 提供的 Token
+        with:
+          tag_name: ${{ github.ref }}  # 使用触发工作流的标签
+          release_name: ${{ github.ref }}  # Release 名称与标签相同
+          draft: false  # 不是草稿
+          prerelease: false  # 不是预发布版本
+
+      # 6. 上传构建产物（zip 文件）
+      - name: Upload zip file
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}  # 使用 create_release 的输出
+          asset_path: ./${{ env.PLUGIN_NAME }}.zip  # 上传的 zip 文件路径
+          asset_name: ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip  # 上传的文件名称
+          asset_content_type: application/zip  # 文件类型
+
+      # 7. 上传 main.js
+      - name: Upload main.js
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.DIST_DIR }}/main.js  # 上传的 main.js 文件路径
+          asset_name: main.js  # 上传的文件名称
+          asset_content_type: text/javascript  # 文件类型
+
+      # 8. 上传 manifest.json
+      - name: Upload manifest.json
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.DIST_DIR }}/manifest.json  # 上传的 manifest.json 文件路径
+          asset_name: manifest.json  # 上传的文件名称
+          asset_content_type: application/json  # 文件类型
+
+      # 9. 上传 styles.css
+      - name: Upload styles.css
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.DIST_DIR }}/styles.css  # 上传的 styles.css 文件路径
+          asset_name: styles.css  # 上传的文件名称
+          asset_content_type: text/css  # 文件类型
