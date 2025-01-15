@@ -26,9 +26,11 @@
     </div>
     <div class="chart-container">
       <canvas ref="chartCanvas"></canvas>
+      <p v-if="noData" class="no-data-message">No data available for the selected date range.</p>
     </div>
     <div class="footer">
       <button @click="closeModal">Close</button>
+      <button @click="switchToTable">Switch to Table</button>
     </div>
   </div>
 </template>
@@ -40,6 +42,8 @@ import Chart from 'chart.js/auto';
 export default {
   props: {
     cellColors: Object, // 从父组件传递的时间表数据
+    onClose: Function, // 父组件传递的关闭模态框的函数
+    onSwitchToTable: Function, // 父组件传递的切换到表格模态框的函数
   },
   setup(props) {
     const chartCanvas = ref(null);
@@ -47,35 +51,59 @@ export default {
     const endDate = ref(new Date().toISOString().split('T')[0]); // 默认结束日期为当天
     const chartType = ref('bar'); // 默认图表类型为柱状图
     const dataType = ref('activity'); // 默认按活动分组
+    const noData = ref(false); // 是否没有数据
     let chartInstance = null;
+
+    // 预定义颜色列表
+    const colors = [
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 206, 86, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(199, 199, 199, 0.2)',
+      'rgba(83, 102, 255, 0.2)',
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+    ];
 
     // 根据时间段生成统计数据
     const generateStatistics = (start, end) => {
-      const activities = {};
-      const categories = {};
+      const activities = {}; // 按活动统计
+      const categories = {}; // 按分类统计
+      const dates = []; // 所有日期
 
       const startDateObj = new Date(start);
       const endDateObj = new Date(end);
 
+      // 生成日期范围
       for (let d = new Date(startDateObj); d <= endDateObj; d.setDate(d.getDate() + 1)) {
         const dateString = d.toISOString().split('T')[0];
-        const dayData = props.cellColors[dateString];
+        dates.push(dateString);
 
+        const dayData = props.cellColors[dateString];
         if (dayData) {
           dayData.hours.forEach((hour) => {
             if (hour.activity) {
               // 按活动统计
               if (!activities[hour.activity]) {
-                activities[hour.activity] = 0;
+                activities[hour.activity] = {};
               }
-              activities[hour.activity] += 1;
+              if (!activities[hour.activity][dateString]) {
+                activities[hour.activity][dateString] = 0;
+              }
+              activities[hour.activity][dateString] += 1;
 
               // 按分类统计
               if (hour.category) {
                 if (!categories[hour.category]) {
-                  categories[hour.category] = 0;
+                  categories[hour.category] = {};
                 }
-                categories[hour.category] += 1;
+                if (!categories[hour.category][dateString]) {
+                  categories[hour.category][dateString] = 0;
+                }
+                categories[hour.category][dateString] += 1;
               }
             }
           });
@@ -83,73 +111,134 @@ export default {
       }
 
       return {
-        labels: Object.keys(activities),
-        data: Object.values(activities),
-        categoryLabels: Object.keys(categories),
-        categoryData: Object.values(categories),
+        dates,
+        activities,
+        categories,
       };
     };
 
     // 更新图表
     const updateChart = () => {
-  const { labels, data, categoryLabels, categoryData } = generateStatistics(startDate.value, endDate.value);
+      const { dates, activities, categories } = generateStatistics(startDate.value, endDate.value);
 
-  const chartLabels = dataType.value === 'activity' ? labels : categoryLabels;
-  const chartData = dataType.value === 'activity' ? data : categoryData;
+      // 检查是否有数据
+      if (Object.keys(activities).length === 0 && Object.keys(categories).length === 0) {
+        noData.value = true;
+        if (chartInstance) {
+          chartInstance.destroy(); // 销毁旧的图表实例
+          chartInstance = null;
+        }
+        return;
+      } else {
+        noData.value = false;
+      }
 
-  if (chartInstance) {
-    chartInstance.destroy(); // Destroy the old chart instance
-  }
+      let labels = [];
+      let datasets = [];
 
-  if (chartCanvas.value) {
-    chartInstance = new Chart(chartCanvas.value, {
-      type: chartType.value, // Use the selected chart type
-      data: {
-        labels: chartLabels,
-        datasets: [
-          {
-            label: 'Time Spent (Hours)', // Updated label
-            data: chartData,
-            backgroundColor: [
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-            ], // Different colors
-            borderColor: [
-              'rgba(75, 192, 192, 1)',
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(153, 102, 255, 1)',
-            ],
-            borderWidth: 1,
+      if (chartType.value === 'line') {
+        // 折线图逻辑
+        labels = dates; // X 轴为日期
+
+        if (dataType.value === 'activity') {
+          // 按活动分组
+          for (const [activity, data] of Object.entries(activities)) {
+            datasets.push({
+              label: activity,
+              data: dates.map((date) => data[date] || 0), // 如果某天没有该活动，设置为 0
+              borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // 随机颜色
+              fill: false,
+            });
+          }
+        } else if (dataType.value === 'category') {
+          // 按分类分组
+          for (const [category, data] of Object.entries(categories)) {
+            datasets.push({
+              label: category,
+              data: dates.map((date) => data[date] || 0), // 如果某天没有该分类，设置为 0
+              borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // 随机颜色
+              fill: false,
+            });
+          }
+        }
+      } else {
+        // 饼图和柱状图逻辑
+        if (dataType.value === 'activity') {
+          labels = Object.keys(activities);
+          datasets = [
+            {
+              label: 'Time Spent (Hours)',
+              data: Object.values(activities).map((data) => {
+                return Object.values(data).reduce((sum, val) => sum + val, 0);
+              }),
+              backgroundColor: colors.slice(0, labels.length), // 使用预定义颜色
+              borderColor: colors.slice(0, labels.length).map(color => color.replace('0.2', '1')), // 边框颜色
+              borderWidth: 1,
+            },
+          ];
+        } else if (dataType.value === 'category') {
+          labels = Object.keys(categories);
+          datasets = [
+            {
+              label: 'Time Spent (Hours)',
+              data: Object.values(categories).map((data) => {
+                return Object.values(data).reduce((sum, val) => sum + val, 0);
+              }),
+              backgroundColor: colors.slice(0, labels.length), // 使用预定义颜色
+              borderColor: colors.slice(0, labels.length).map(color => color.replace('0.2', '1')), // 边框颜色
+              borderWidth: 1,
+            },
+          ];
+        }
+      }
+
+      if (chartInstance) {
+        chartInstance.destroy(); // 销毁旧的图表实例
+      }
+
+      if (chartCanvas.value) {
+        chartInstance = new Chart(chartCanvas.value, {
+          type: chartType.value, // 使用选择的图表类型
+          data: {
+            labels: labels,
+            datasets: datasets,
           },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: chartType.value === 'pie' ? {} : {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Hours', // Updated Y-axis title
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: chartType.value === 'pie' ? {} : {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Hours',
+                },
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: chartType.value === 'line' ? 'Date' : (dataType.value === 'activity' ? 'Activity' : 'Category'),
+                },
+              },
             },
           },
-          x: {
-            title: {
-              display: true,
-              text: dataType.value === 'activity' ? 'Activity' : 'Category', // Updated X-axis title
-            },
-          },
-        },
-      },
-    });
-  }
-}; 
+        });
+      }
+    };
+
+    // 关闭模态框
+    const closeModal = () => {
+      if (props.onClose) {
+        props.onClose(); // 调用父组件传递的关闭函数
+      }
+    };
+
+    // 切换到表格模态框
+    const switchToTable = () => {
+      if (props.onSwitchToTable) {
+        props.onSwitchToTable(); // 调用父组件传递的切换函数
+      }
+    };
 
     // 初始化图表
     onMounted(() => {
@@ -167,7 +256,10 @@ export default {
       endDate,
       chartType,
       dataType,
+      noData,
       updateChart,
+      closeModal,
+      switchToTable,
     };
   },
 };
@@ -178,7 +270,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* 垂直居中 */
+  justify-content: center;
   padding: 20px;
   width: 100%;
   height: 100%;
@@ -215,12 +307,24 @@ export default {
   height: 60%;
   margin: 20px 0;
   display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.no-data-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #888;
+  font-size: 16px;
 }
 
 .footer {
-  margin-top: 20px; /* 关闭按钮与图表之间的间距 */
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
 }
 
 .controls button {
