@@ -4,15 +4,7 @@
 ### 项目.
 ###
 
-##
-## Exclude the npm lock file.
-##
-## 排除 npm 的锁文件.
-##
-/package-lock.json
-
-##
-## Exclude the dependencies of the package.
+#### Exclude the dependencies of the package.
 ##
 ## 排除包的依赖项.
 ##

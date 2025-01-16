@@ -7,7 +7,7 @@ on:
 
 env:
   PLUGIN_NAME: "obsidian-lyubishev-time-management-plugin"  # 插件名称
-  DIST_DIR: "dist"  # 构建产物目录
+  DIST_DIR: "obsidian-lyubishev-time-management-plugin"  # 构建产物目录
 
 jobs:
   build:
