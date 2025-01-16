@@ -39,6 +39,7 @@ export default class LyubishevPlugin extends Plugin {
       name: 'Generate Gantt Chart',
       callback: () => this.createGanttChartModal(),
     });
+
     // 在主界面添加按钮
     this.addRibbonIcon('bar-chart', 'Show Statistics', () => {
       this.createStatisticsModal();
@@ -71,7 +72,7 @@ export default class LyubishevPlugin extends Plugin {
 
   createModal() {
     const modal = new Modal(this.app);
-    const container = modal.contentEl.createDiv();
+    const container = modal.contentEl.createDiv('lyubishev-modal-container');
     const app = createApp(TimeTable, {
       cellColors: this.cellColors,
       saveCellColors: this.saveCellColors.bind(this),
@@ -91,13 +92,13 @@ export default class LyubishevPlugin extends Plugin {
 
   createStatisticsModal() {
     const modal = new Modal(this.app);
-    const container = modal.contentEl.createDiv();
+    const container = modal.contentEl.createDiv('lyubishev-modal-container');
     const app = createApp(TimeStatistics, {
       cellColors: this.cellColors,
-      onClose: () => modal.close(), // 传递关闭函数
+      onClose: () => modal.close(),
       onSwitchToTable: () => {
-        modal.close(); // 关闭当前模态框
-        this.createModal(); // 打开表格模态框
+        modal.close();
+        this.createModal();
       },
     });
     app.mount(container);
@@ -107,11 +108,8 @@ export default class LyubishevPlugin extends Plugin {
   createGanttChartModal() {
     const modal = new Modal(this.app);
     modal.titleEl.setText("Select Date Range for Gantt Chart");
-    const container = modal.contentEl.createDiv();
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.gap = '10px';
-
+    const container = modal.contentEl.createDiv('lyubishev-gantt-modal-container');
+    
     const startDateInput = document.createElement('input');
     startDateInput.type = 'date';
     startDateInput.value = new Date().toISOString().split('T')[0];
@@ -124,6 +122,7 @@ export default class LyubishevPlugin extends Plugin {
 
     const confirmButton = document.createElement('button');
     confirmButton.textContent = 'Generate Gantt Chart';
+    confirmButton.classList.add('lyubishev-confirm-button');
     confirmButton.onclick = () => {
       const startDate = startDateInput.value;
       const endDate = endDateInput.value;
